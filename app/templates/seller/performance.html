@@ -1,0 +1,77 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Seller Performance Scorecard | VendorCenter{% endblock %}
+{% block page_title %}Seller Scorecard{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Seller Performance Scorecard</h2>
+    <p class="text-xs text-slate-500 mt-0.5">Platform compliance metrics that govern seller tier badges and promotional visibility</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Overall Score -->
+    <div class="bg-gradient-to-br from-indigo-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-lg flex flex-col justify-between space-y-6">
+      <div>
+        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wider">
+          Tier 1 Platinum Vendor
+        </span>
+        <h3 class="text-xl font-black mt-3">Overall Health Score</h3>
+        <p class="text-xs text-slate-300 mt-1">Calculated across 30-day fulfillment, on-time dispatch, and customer ratings.</p>
+      </div>
+      <div>
+        <div class="text-5xl font-black text-emerald-400">98.4<span class="text-2xl font-bold text-slate-300">/100</span></div>
+        <p class="text-[11px] text-slate-300 mt-1">Excellent standing across India marketplace</p>
+      </div>
+    </div>
+
+    <!-- Detailed KPIs -->
+    <div class="md:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Key Compliance Benchmarks</h3>
+
+      <div class="space-y-4 text-xs font-semibold">
+        <div>
+          <div class="flex justify-between mb-1.5">
+            <span class="text-slate-700">On-Time Dispatch Rate (&lt; 24 hrs)</span>
+            <span class="font-extrabold text-emerald-600">99.1% (Target: &gt;95%)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: 99.1%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1.5">
+            <span class="text-slate-700">Order Cancellation Rate</span>
+            <span class="font-extrabold text-emerald-600">0.2% (Target: &lt;1.0%)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: 2%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1.5">
+            <span class="text-slate-700">Customer Rating Average</span>
+            <span class="font-extrabold text-emerald-600">{{ seller.rating }} / 5.0 (Target: &gt;4.0)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: 98%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1.5">
+            <span class="text-slate-700">Return Dispute Resolution Time</span>
+            <span class="font-extrabold text-emerald-600">&lt; 12 Hours (Target: &lt;24 hrs)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: 95%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

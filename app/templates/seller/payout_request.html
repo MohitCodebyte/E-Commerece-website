@@ -1,0 +1,51 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Request Bank Withdrawal | VendorCenter{% endblock %}
+{% block page_title %}Request Payout{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Request Payout</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Transfer your earnings to your linked bank account</p>
+    </div>
+    <a href="{{ url_for('seller.payouts') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors">
+      Cancel
+    </a>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+    <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-between">
+      <div>
+        <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Available Balance</span>
+        <span class="text-2xl font-black text-emerald-700">{{ seller.balance|currency }}</span>
+      </div>
+      <span class="material-symbols-outlined text-3xl text-emerald-500">account_balance_wallet</span>
+    </div>
+
+    <form action="{{ url_for('seller.payout_request') }}" method="POST" class="space-y-4 text-xs font-semibold">
+      <div>
+        <label class="block text-slate-700 uppercase mb-1">Withdrawal Amount (₹)</label>
+        <input type="number" step="0.01" name="amount" min="100" max="{{ seller.balance }}" 
+               value="{{ seller.balance }}" required
+               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-base font-black text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
+        <p class="text-[11px] text-slate-400 mt-1">Minimum payout request is ₹100.00 &bull; Disbursed within 24 hours.</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1 text-slate-600">
+        <span class="text-[10px] font-bold text-slate-400 uppercase">Receiving Bank</span>
+        <p class="font-extrabold text-slate-900">{{ seller.bank_details.bank_name }}</p>
+        <p class="font-mono text-[11px]">{{ seller.bank_details.account_number }} &bull; IFSC: {{ seller.bank_details.ifsc }}</p>
+      </div>
+
+      <div class="pt-4 flex justify-end gap-3">
+        <a href="{{ url_for('seller.payouts') }}" class="px-5 py-2.5 bg-slate-100 rounded-xl font-bold text-slate-700">Cancel</a>
+        <button type="submit" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md transition-all">
+          Confirm Withdrawal
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

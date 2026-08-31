@@ -1,0 +1,98 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}My Products | VendorCenter{% endblock %}
+{% block page_title %}Product Catalog{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Active Listings</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Manage stock, variants, and pricing across your catalog</p>
+    </div>
+    <a href="{{ url_for('seller.product_add') }}" 
+       class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add_circle</span>
+      Add New Listing
+    </a>
+  </div>
+
+  <!-- Product Table Card -->
+  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-semibold">
+        <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="py-3.5 px-6">Product</th>
+            <th class="py-3.5 px-4">SKU</th>
+            <th class="py-3.5 px-4">Category</th>
+            <th class="py-3.5 px-4">Price</th>
+            <th class="py-3.5 px-4">Stock Level</th>
+            <th class="py-3.5 px-4">Rating</th>
+            <th class="py-3.5 px-6 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for p in products %}
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-4 px-6">
+                <div class="flex items-center gap-3">
+                  <img src="{{ p.thumbnail }}" alt="{{ p.title }}" class="w-12 h-12 rounded-xl bg-slate-50 border p-1 object-contain">
+                  <div class="max-w-xs">
+                    <h4 class="font-bold text-slate-900 line-clamp-1">{{ p.title }}</h4>
+                    <span class="text-[11px] text-indigo-600 font-medium">{{ p.variants|length }} Variants</span>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-4 font-mono text-slate-600">{{ p.sku }}</td>
+              <td class="py-4 px-4 text-slate-600">{{ p.category_name }}</td>
+              <td class="py-4 px-4 font-extrabold text-slate-900">{{ p.price|currency }}</td>
+              <td class="py-4 px-4">
+                {% if p.stock > 10 %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">
+                    {{ p.stock }} units
+                  </span>
+                {% elif p.stock > 0 %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold">
+                    Low ({{ p.stock }})
+                  </span>
+                {% else %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold">
+                    Out of Stock
+                  </span>
+                {% endif %}
+              </td>
+              <td class="py-4 px-4">
+                <span class="flex items-center gap-1 font-bold text-slate-900">
+                  <span class="material-symbols-outlined text-amber-400 text-sm icon-fill">star</span>
+                  {{ p.rating }}
+                </span>
+              </td>
+              <td class="py-4 px-6 text-right space-x-2">
+                <a href="{{ url_for('seller.product_edit', product_id=p.id) }}" 
+                   class="inline-block p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-slate-100 transition-colors" title="Edit Listing">
+                  <span class="material-symbols-outlined text-base">edit</span>
+                </a>
+                <a href="{{ url_for('seller.product_variants', product_id=p.id) }}" 
+                   class="inline-block p-1.5 text-slate-400 hover:text-cyan-600 rounded-lg hover:bg-slate-100 transition-colors" title="Manage Variants">
+                  <span class="material-symbols-outlined text-base">layers</span>
+                </a>
+                <a href="{{ url_for('seller.product_insights', product_id=p.id) }}" 
+                   class="inline-block p-1.5 text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-slate-100 transition-colors" title="View Insights">
+                  <span class="material-symbols-outlined text-base">analytics</span>
+                </a>
+                <form action="{{ url_for('seller.product_delete', product_id=p.id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                  <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors" title="Delete Listing">
+                    <span class="material-symbols-outlined text-base">delete</span>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

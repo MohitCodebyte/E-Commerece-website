@@ -1,0 +1,96 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Track Your Package | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="text-center max-w-xl mx-auto mb-10">
+    <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3 shadow-inner">
+      <span class="material-symbols-outlined text-3xl">local_shipping</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Live Package Tracking</h1>
+    <p class="text-xs text-slate-500 mt-1">Real-time status updates across all marketplace courier partners</p>
+
+    <!-- Query Input -->
+    <form action="{{ url_for('customer.track_order') }}" method="GET" class="mt-6 flex gap-2">
+      <input type="text" name="order_id" value="{{ query_id or '' }}" placeholder="Enter Order # (e.g. ORD-2024-8901)" required
+             class="flex-1 px-4 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-indigo-600/30 shadow-sm">
+      <button type="submit" class="px-6 py-3 bg-slate-900 hover:bg-indigo-600 text-white rounded-2xl text-xs font-bold transition-colors shadow-md">
+        Track
+      </button>
+    </form>
+  </div>
+
+  {% if order %}
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-8">
+      <!-- Order Header Strip -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100">
+        <div>
+          <span class="text-xs font-bold text-slate-400 uppercase">Order Identification</span>
+          <h3 class="text-lg font-extrabold text-slate-900 font-mono">#{{ order.id }}</h3>
+          <p class="text-xs text-slate-500">Carrier: <strong>{{ order.carrier }}</strong> &bull; Waybill: {{ order.tracking_number }}</p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-bold text-slate-400 uppercase block">Estimated Delivery</span>
+          <span class="text-base font-extrabold text-indigo-600">{{ order.estimated_delivery }}</span>
+        </div>
+      </div>
+
+      <!-- Timeline Stepper -->
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-6">Delivery Progress</h4>
+        <div class="space-y-6">
+          {% for step in order.tracking_timeline %}
+            <div class="flex items-start gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all
+                  {% if step.completed %}bg-emerald-500 text-white shadow-md shadow-emerald-500/20
+                  {% elif loop.first or (order.tracking_timeline[loop.index0 - 1] and order.tracking_timeline[loop.index0 - 1].completed) %}bg-indigo-600 text-white timeline-active-pulse shadow-md shadow-indigo-500/30
+                  {% else %}bg-slate-100 text-slate-400 border border-slate-200{% endif %}">
+                  {% if step.completed %}
+                    <span class="material-symbols-outlined text-sm">check</span>
+                  {% elif loop.first or (order.tracking_timeline[loop.index0 - 1] and order.tracking_timeline[loop.index0 - 1].completed) %}
+                    <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                  {% else %}
+                    <span>{{ loop.index }}</span>
+                  {% endif %}
+                </div>
+                {% if not loop.last %}
+                  <div class="w-0.5 h-10 {% if step.completed %}bg-emerald-500{% else %}bg-slate-200{% endif %} my-1 transition-colors duration-500"></div>
+                {% endif %}
+              </div>
+              <div class="flex-1 pb-2">
+                <div class="flex items-center justify-between">
+                  <h5 class="text-sm font-bold text-slate-900">{{ step.status }}</h5>
+                  <span class="text-xs font-mono text-slate-400">{{ step.time }}</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">{{ step.location }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Recipient & Item Summary -->
+      <div class="pt-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div>
+          <span class="font-bold text-slate-400 uppercase block mb-1">Destination</span>
+          <p class="font-bold text-slate-900">{{ order.shipping_address.recipient }}</p>
+          <p class="text-slate-600">{{ order.shipping_address.street }}, {{ order.shipping_address.city }}</p>
+        </div>
+        <div>
+          <span class="font-bold text-slate-400 uppercase block mb-1">Package Contents</span>
+          <p class="font-bold text-slate-900">{{ order['items']|length }} Item(s)</p>
+          <p class="text-slate-600 truncate">{{ order['items'][0].product_title }}{% if order['items']|length > 1 %} + more{% endif %}</p>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto shadow-sm">
+      <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">find_in_page</span>
+      <h3 class="text-base font-bold text-slate-800">Track an active delivery</h3>
+      <p class="text-xs text-slate-500 mt-1">Enter your order ID above to view live courier status.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

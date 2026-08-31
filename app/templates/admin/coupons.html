@@ -1,0 +1,114 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Coupons & Discounts | Super Admin{% endblock %}
+{% block page_title %}Marketing & Promo Engine{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Coupons &amp; Promotional Codes</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Manage marketplace-wide discounts, minimum purchase limits, and expiry dates</p>
+    </div>
+    <button type="button" onclick="document.getElementById('coupon-modal').classList.remove('hidden')"
+            class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add</span>
+      Create Promo Coupon
+    </button>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-semibold">
+        <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="py-3.5 px-6">Coupon Code</th>
+            <th class="py-3.5 px-4">Discount</th>
+            <th class="py-3.5 px-4">Min. Spend</th>
+            <th class="py-3.5 px-4">Usage Limits</th>
+            <th class="py-3.5 px-4">Status</th>
+            <th class="py-3.5 px-6 text-right">Expiry</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for c in coupons %}
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-4 px-6">
+                <span class="font-mono font-black text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                  {{ c.code }}
+                </span>
+              </td>
+              <td class="py-4 px-4 font-bold text-slate-900">
+                {% if c.discount_type == 'percentage' %}
+                  {{ c.discount_value }}% OFF
+                {% else %}
+                  {{ c.discount_value|currency }} OFF
+                {% endif %}
+              </td>
+              <td class="py-4 px-4 text-slate-600">{{ c.min_order_amount|currency }}</td>
+              <td class="py-4 px-4 text-slate-500">{{ c.used_count }} / {{ c.max_uses }} applied</td>
+              <td class="py-4 px-4">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase">
+                  Active
+                </span>
+              </td>
+              <td class="py-4 px-6 text-right font-mono text-slate-400">{{ c.valid_until }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create Coupon Modal -->
+  <div id="coupon-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-slate-900">Create New Coupon</h3>
+        <button type="button" onclick="document.getElementById('coupon-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form action="{{ url_for('admin.coupon_add') }}" method="POST" class="space-y-4 text-xs font-semibold">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Coupon Code</label>
+          <input type="text" name="code" placeholder="DIWALI30" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-mono uppercase font-bold">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Type</label>
+            <select name="discount_type" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-bold">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed Amount (₹)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Value</label>
+            <input type="number" step="0.01" name="discount_value" placeholder="15" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-bold">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Minimum Order Amount (₹)</label>
+          <input type="number" step="0.01" name="min_order_amount" value="1000" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Max Uses</label>
+            <input type="number" name="max_uses" value="500" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+          </div>
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Valid Until</label>
+            <input type="date" name="valid_until" required value="2026-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+          </div>
+        </div>
+        <div class="pt-4 flex justify-end gap-3">
+          <button type="button" onclick="document.getElementById('coupon-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold">Save Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Sales Analytics & Trends | VendorCenter{% endblock %}
+{% block page_title %}Analytics & Growth{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Sales Analytics</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Track traffic, revenue growth, and high-velocity catalog items</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-sm">
+        Last 30 Days
+      </span>
+    </div>
+  </div>
+
+  <!-- KPI Overview -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Store Views</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">18,420</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">+14.2% vs last month</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Orders Converted</span>
+      <div class="text-2xl font-black text-indigo-600 mt-2">{{ total_orders }}</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">3.6% Conversion Rate</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Average Order Value</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">₹12,450</div>
+      <p class="text-[11px] text-slate-500 font-semibold mt-1">High-ticket tech segment</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Return Rate</span>
+      <div class="text-2xl font-black text-emerald-600 mt-2">1.2%</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">Well below 3% industry threshold</p>
+    </div>
+  </div>
+
+  <!-- Top Performing Products -->
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+    <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider">Top Performing Products</h3>
+    <div class="space-y-4">
+      {% for p in products %}
+        <div class="flex items-center justify-between gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="flex items-center gap-3">
+            <img src="{{ p.thumbnail }}" alt="{{ p.title }}" class="w-12 h-12 rounded-xl bg-white border p-1 object-contain">
+            <div>
+              <h4 class="text-xs font-bold text-slate-900">{{ p.title }}</h4>
+              <span class="text-[11px] text-slate-500">SKU: {{ p.sku }} &bull; Rating: {{ p.rating }} ★</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-extrabold text-slate-900 block">{{ p.price|currency }}</span>
+            <span class="text-[10px] text-emerald-600 font-bold uppercase">High Demand</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

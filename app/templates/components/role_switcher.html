@@ -1,0 +1,40 @@
+<!-- Nova Mart Demo Role Switcher Bar -->
+<div class="role-switcher-banner">
+  <div class="flex items-center gap-3">
+    <span class="flex items-center gap-1 font-semibold text-xs text-indigo-400">
+      <span class="material-symbols-outlined text-sm">swap_horiz</span>
+      DEMO ROLE SWITCHER:
+    </span>
+    <div class="flex items-center gap-1.5">
+      <a href="{{ url_for('auth.switch_demo_role', role='customer') }}" 
+         class="role-pill {% if active_role == 'customer' or not active_role %}active{% endif %}"
+         title="Browse as Aarav Sharma (Customer)">
+        Customer
+      </a>
+      <a href="{{ url_for('auth.switch_demo_role', role='seller') }}" 
+         class="role-pill {% if active_role == 'seller' %}active{% endif %}"
+         title="Manage TechZone Electronics as Seller">
+        Seller Portal
+      </a>
+      <a href="{{ url_for('auth.switch_demo_role', role='admin') }}" 
+         class="role-pill {% if active_role == 'admin' %}active{% endif %}"
+         title="Super Admin Dashboard">
+        Super Admin
+      </a>
+    </div>
+  </div>
+  <div class="hidden sm:flex items-center gap-4 text-xs text-slate-300">
+    {% if current_user %}
+      <span>Logged in as: <strong class="text-white">{{ current_user.name }}</strong> ({{ current_user.role|title }})</span>
+      {% if current_user.role == 'seller' %}
+        <a href="{{ url_for('seller.dashboard') }}" class="text-indigo-300 hover:text-white underline font-medium">Open VendorCenter &rarr;</a>
+      {% elif current_user.role == 'admin' %}
+        <a href="{{ url_for('admin.dashboard') }}" class="text-indigo-300 hover:text-white underline font-medium">Open Admin Portal &rarr;</a>
+      {% endif %}
+      <a href="{{ url_for('auth.logout') }}" class="text-slate-400 hover:text-red-400 transition-colors ml-1">Log Out</a>
+    {% else %}
+      <span class="text-slate-400">Phase 1 Demo Mode &bull; No DB Connection Required</span>
+      <a href="{{ url_for('auth.login') }}" class="text-indigo-300 hover:text-white font-medium">Sign In</a>
+    {% endif %}
+  </div>
+</div>

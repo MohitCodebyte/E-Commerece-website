@@ -1,0 +1,143 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Shop All Departments | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Breadcrumbs & Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+    <div>
+      <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
+        <a href="{{ url_for('customer.home') }}" class="hover:text-indigo-600">Home</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800">Shop Catalog</span>
+        {% if selected_category %}
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="text-indigo-600 font-bold capitalize">{{ selected_category }}</span>
+        {% endif %}
+      </nav>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">All Departments</h1>
+    </div>
+
+    <!-- Sorting Control -->
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Sort by:</span>
+      <form id="sort-form" method="GET" class="inline-block">
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+        {% if selected_brand %}<input type="hidden" name="brand" value="{{ selected_brand }}">{% endif %}
+        <select name="sort" onchange="document.getElementById('sort-form').submit()" 
+                class="py-2 pl-3 pr-8 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/30 focus:border-indigo-600 shadow-sm cursor-pointer">
+          <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
+          <option value="price-asc" {% if selected_sort == 'price-asc' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price-desc" {% if selected_sort == 'price-desc' %}selected{% endif %}>Price: High to Low</option>
+          <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Customer Rating</option>
+          <option value="popular" {% if selected_sort == 'popular' %}selected{% endif %}>Popularity</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <!-- Layout: Sidebar + Product Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-8">
+    
+    <!-- Filter Sidebar -->
+    <aside class="space-y-6">
+      <!-- Filter Card: Categories -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 flex items-center justify-between">
+          <span>Categories</span>
+          <span class="material-symbols-outlined text-sm text-slate-400">category</span>
+        </h3>
+        <ul class="space-y-2 text-xs font-semibold">
+          <li>
+            <a href="{{ url_for('customer.shop') }}" class="flex items-center justify-between py-1 {% if not selected_category %}text-indigo-600 font-bold{% else %}text-slate-600 hover:text-indigo-600{% endif %}">
+              <span>All Categories</span>
+            </a>
+          </li>
+          {% for cat in categories %}
+            <li>
+              <a href="{{ url_for('customer.shop', category=cat.slug) }}" class="flex items-center justify-between py-1 {% if selected_category == cat.slug %}text-indigo-600 font-bold{% else %}text-slate-600 hover:text-indigo-600{% endif %}">
+                <span>{{ cat.name }}</span>
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px]">{{ cat.product_count }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Filter Card: Brands -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3 flex items-center justify-between">
+          <span>Brands</span>
+          <span class="material-symbols-outlined text-sm text-slate-400">verified</span>
+        </h3>
+        <ul class="space-y-2 text-xs font-semibold">
+          {% for b in brands %}
+            <li>
+              <a href="{{ url_for('customer.shop', brand=b.slug, category=selected_category) }}" 
+                 class="flex items-center justify-between py-1 {% if selected_brand == b.slug %}text-indigo-600 font-bold{% else %}text-slate-600 hover:text-indigo-600{% endif %}">
+                <span>{{ b.name }}</span>
+                {% if b.is_verified %}
+                  <span class="material-symbols-outlined text-xs text-emerald-500">verified</span>
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Filter Card: Price Range -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">Price Range (₹)</h3>
+        <form method="GET" action="{{ url_for('customer.shop') }}" class="space-y-3">
+          {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+          {% if selected_brand %}<input type="hidden" name="brand" value="{{ selected_brand }}">{% endif %}
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" name="min_price" value="{{ min_price or '' }}" placeholder="Min ₹" 
+                   class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+            <input type="number" name="max_price" value="{{ max_price or '' }}" placeholder="Max ₹" 
+                   class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+          </div>
+          <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-indigo-600 text-white rounded-lg text-xs font-bold transition-colors">
+            Apply Filter
+          </button>
+        </form>
+      </div>
+
+      <!-- Reset Filter CTA -->
+      {% if selected_category or selected_brand or min_price or max_price %}
+        <a href="{{ url_for('customer.shop') }}" class="block text-center py-2 text-xs font-bold text-red-600 hover:underline">
+          &times; Reset All Filters
+        </a>
+      {% endif %}
+    </aside>
+
+    <!-- Products Column -->
+    <div class="lg:col-span-3">
+      <!-- Active Results Counter -->
+      <div class="mb-4 flex items-center justify-between text-xs text-slate-500 font-semibold">
+        <span>Showing <strong class="text-slate-900">{{ products|length }}</strong> curated essentials</span>
+      </div>
+
+      <!-- Grid -->
+      {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          {% for product in products %}
+            {% include 'components/product_card.html' %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto my-8">
+          <span class="material-symbols-outlined text-5xl text-slate-300 mb-3">search_off</span>
+          <h3 class="text-lg font-bold text-slate-900">No products match your criteria</h3>
+          <p class="text-xs text-slate-500 mt-1 mb-6">Try adjusting your category, brand or price filter.</p>
+          <a href="{{ url_for('customer.shop') }}" class="px-5 py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition-colors">
+            Clear Filters
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

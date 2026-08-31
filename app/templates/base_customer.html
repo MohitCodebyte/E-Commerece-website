@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NOVA MART | Premium Multi-Vendor Marketplace{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Shop verified electronics, minimalist streetwear, and contemporary home essentials on Nova Mart.{% endblock %}">
+
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0f172a",
+            "secondary": "#4f46e5",
+            "secondary-hover": "#4338ca",
+            "accent": "#06b6d4",
+            "background": "#f8fafc",
+            "surface": "#ffffff",
+            "surface-subtle": "#f1f5f9",
+            "on-background": "#0f172a",
+            "on-surface": "#0f172a",
+            "outline": "#76777d",
+            "outline-variant": "#e2e8f0",
+            "error": "#ba1a1a",
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+          },
+          maxWidth: {
+            "container-max": "1280px",
+          },
+          spacing: {
+            "gutter": "24px",
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-background text-on-background font-sans antialiased min-h-screen flex flex-col pb-16 md:pb-0">
+  <!-- Top Scroll Progress Bar -->
+  <div id="scroll-progress" class="top-scroll-progress"></div>
+
+  <!-- Top Navigation Bar -->
+  {% include 'components/navbar.html' %}
+
+  <!-- Main Body Content -->
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer & Mobile Bottom Bar -->
+  {% include 'components/footer.html' %}
+
+  <!-- Toast Notification System -->
+  {% include 'components/toasts.html' %}
+
+  <!-- Vanilla JavaScript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

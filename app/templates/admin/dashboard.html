@@ -1,0 +1,183 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Super Admin Console | NOVA MART{% endblock %}
+{% block page_title %}Platform Master Overview{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-fade-in-up">
+  
+  <!-- Platform Header Banner -->
+  <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl border border-slate-800">
+    <div class="space-y-1">
+      <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-cyan-300 text-[11px] font-extrabold uppercase tracking-wider">
+        Platform Health: Optimal &bull; Active Real-Time Operations
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-black tracking-tight pt-1">Marketplace Super Console</h2>
+      <p class="text-xs text-slate-400">Multi-Vendor Aggregator &bull; Global Operations across India</p>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <a href="{{ url_for('admin.product_add') }}" class="btn btn-md btn-primary">
+        <span class="material-symbols-outlined text-base">add_circle</span>
+        <span>Add Product</span>
+      </a>
+      <a href="{{ url_for('admin.coupons') }}" class="btn btn-md btn-secondary border border-slate-700">
+        <span class="material-symbols-outlined text-base">loyalty</span>
+        <span>Create Promo</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Global Metrics (4 Equal Cards) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="nm-card p-6 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Marketplace GMV</span>
+        <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-base">account_balance</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="text-2xl font-black text-slate-900 tracking-tight">{{ metrics.total_gmv|currency }}</div>
+        <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs">trending_up</span> All verified vendor transactions
+        </p>
+      </div>
+    </div>
+
+    <div class="nm-card p-6 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Commission</span>
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-base">payments</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="text-2xl font-black text-indigo-600 tracking-tight">{{ metrics.total_commission|currency }}</div>
+        <p class="text-[11px] text-indigo-600 font-semibold mt-1">10% standardized platform take-rate</p>
+      </div>
+    </div>
+
+    <div class="nm-card p-6 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Live Orders</span>
+        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-base">shopping_bag</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="text-2xl font-black text-slate-900 tracking-tight">{{ metrics.total_orders }}</div>
+        <p class="text-[11px] text-slate-500 font-semibold mt-1">Nationwide fulfillment pipeline</p>
+      </div>
+    </div>
+
+    <div class="nm-card p-6 flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Registered Merchants</span>
+        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+          <span class="material-symbols-outlined text-base">storefront</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="text-2xl font-black text-slate-900 tracking-tight">{{ metrics.total_sellers }}</div>
+        <p class="text-[11px] text-emerald-600 font-semibold mt-1">KYC verified vendor partners</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Order Activity & Categories -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- Recent Global Orders Table -->
+    <div class="lg:col-span-8 nm-card p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900">Recent Global Orders</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Real-time marketplace orders across all merchants</p>
+        </div>
+        <a href="{{ url_for('admin.orders') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+          View Master Registry &rarr;
+        </a>
+      </div>
+
+      <div class="nm-table-wrapper overflow-x-auto">
+        <table class="nm-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Total Amount</th>
+              <th>Commission</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in recent_orders %}
+              <tr>
+                <td class="font-mono font-bold text-slate-900">#{{ o.id }}</td>
+                <td class="font-semibold text-slate-700">{{ o.shipping_address.recipient }}</td>
+                <td class="font-black text-slate-900">{{ o.total|currency }}</td>
+                <td class="font-bold text-indigo-600">{{ o.total_commission|currency }}</td>
+                <td>
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide
+                    {% if o.status == 'delivered' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+                    {% elif o.status == 'shipped' %}bg-blue-50 text-blue-700 border border-blue-200
+                    {% else %}bg-amber-50 text-amber-700 border border-amber-200{% endif %}">
+                    {{ o.status }}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <a href="{{ url_for('admin.order_detail', order_id=o.id) }}" class="btn btn-sm btn-outline text-indigo-600 border-indigo-200 hover:bg-indigo-50">
+                    Inspect &rarr;
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Side: Category Breakdown & Quick Actions -->
+    <div class="lg:col-span-4 space-y-6">
+      <!-- Categories Breakdown -->
+      <div class="nm-card p-6 space-y-4">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">Department Volume</h3>
+        <div class="space-y-2.5 text-xs">
+          {% for c in categories %}
+            <div class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
+              <span class="text-slate-700 font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-slate-400">{{ c.icon }}</span>
+                <span>{{ c.name }}</span>
+              </span>
+              <span class="px-2 py-0.5 rounded-md bg-slate-100 font-bold text-slate-600 text-[11px]">{{ c.product_count }} items</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Quick Platform Actions -->
+      <div class="nm-card p-6 space-y-3">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 mb-2">Platform Quick Actions</h3>
+        <a href="{{ url_for('admin.categories') }}" class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 text-xs font-bold text-slate-800 hover:text-indigo-600 transition-colors">
+          <span class="material-symbols-outlined text-base text-indigo-600">category</span>
+          <span>Manage Categories &amp; Brands</span>
+        </a>
+        <a href="{{ url_for('admin.inventory') }}" class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 text-xs font-bold text-slate-800 hover:text-indigo-600 transition-colors">
+          <span class="material-symbols-outlined text-base text-indigo-600">inventory_2</span>
+          <span>Global Warehouse Monitor</span>
+        </a>
+        <a href="{{ url_for('admin.reviews') }}" class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 text-xs font-bold text-slate-800 hover:text-indigo-600 transition-colors">
+          <span class="material-symbols-outlined text-base text-amber-500">rate_review</span>
+          <span>Moderate Product Reviews</span>
+        </a>
+        <a href="{{ url_for('admin.notifications') }}" class="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 text-xs font-bold text-slate-800 hover:text-indigo-600 transition-colors">
+          <span class="material-symbols-outlined text-base text-indigo-600">campaign</span>
+          <span>Dispatch System Broadcast</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

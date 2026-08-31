@@ -1,0 +1,55 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Global Inventory Management | Super Admin{% endblock %}
+{% block page_title %}Global Inventory Oversight{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Global Inventory Monitor</h2>
+    <p class="text-xs text-slate-500 mt-0.5">Aggregated stock levels, warehouse health, and seller restocking alerts across India</p>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-semibold">
+        <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="py-3.5 px-6">Product Title</th>
+            <th class="py-3.5 px-4">Vendor</th>
+            <th class="py-3.5 px-4">SKU</th>
+            <th class="py-3.5 px-4">Price</th>
+            <th class="py-3.5 px-4">Units Available</th>
+            <th class="py-3.5 px-6 text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for p in products %}
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-4 px-6 font-bold text-slate-900">
+                <div class="flex items-center gap-3">
+                  <img src="{{ p.thumbnail }}" alt="{{ p.title }}" class="w-10 h-10 rounded-xl bg-slate-50 border p-1 object-contain">
+                  <span class="truncate max-w-xs">{{ p.title }}</span>
+                </div>
+              </td>
+              <td class="py-4 px-4 font-bold text-indigo-600">{{ p.seller_name }}</td>
+              <td class="py-4 px-4 font-mono text-slate-500">{{ p.sku }}</td>
+              <td class="py-4 px-4 font-extrabold text-slate-900">{{ p.price|currency }}</td>
+              <td class="py-4 px-4 font-black text-slate-900">{{ p.stock }}</td>
+              <td class="py-4 px-6 text-right">
+                {% if p.stock > 10 %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">Adequate</span>
+                {% elif p.stock > 0 %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold">Low Stock Alert</span>
+                {% else %}
+                  <span class="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold">Stockout</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

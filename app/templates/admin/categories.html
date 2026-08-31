@@ -1,0 +1,105 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Categories & Brands | Super Admin{% endblock %}
+{% block page_title %}Taxonomy & Brand Registry{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Categories &amp; Brands</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Manage marketplace product departments, taxonomies, and registered maker brands</p>
+    </div>
+    <button type="button" onclick="document.getElementById('cat-modal').classList.remove('hidden')"
+            class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">add</span>
+      Add New Category
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Categories List Card -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Active Departments ({{ categories|length }})</h3>
+      <div class="divide-y divide-slate-100">
+        {% for c in categories %}
+          <div class="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-50 text-indigo-600 flex items-center justify-center border">
+                <span class="material-symbols-outlined text-xl">{{ c.icon }}</span>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900">{{ c.name }}</h4>
+                <p class="text-[11px] text-slate-400 font-mono">slug: {{ c.slug }}</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 bg-slate-100 rounded-full text-xs font-bold text-slate-700">
+              {{ c.product_count }} Items
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Registered Brands Card -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Registered Brand Labels ({{ brands|length }})</h3>
+      <div class="divide-y divide-slate-100">
+        {% for b in brands %}
+          <div class="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between">
+            <div>
+              <h4 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                {{ b.name }}
+                {% if b.is_verified %}
+                  <span class="material-symbols-outlined text-xs text-emerald-500">verified</span>
+                {% endif %}
+              </h4>
+              <p class="text-[11px] text-slate-400 font-mono">slug: {{ b.slug }}</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase">
+              Verified
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add Category Modal -->
+  <div id="cat-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-slate-900">Add Marketplace Category</h3>
+        <button type="button" onclick="document.getElementById('cat-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form action="{{ url_for('admin.category_add') }}" method="POST" class="space-y-4 text-xs font-semibold">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Category Name</label>
+          <input type="text" name="name" placeholder="Smart Home & Lighting" required
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Material Icon Name</label>
+          <input type="text" name="icon" placeholder="home_iot_device / devices / checkroom" value="category" required
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-mono">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Description</label>
+          <textarea name="description" rows="3" placeholder="Brief overview of items in this department..." required
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl"></textarea>
+        </div>
+        <div class="pt-4 flex justify-end gap-3">
+          <button type="button" onclick="document.getElementById('cat-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold">Create Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

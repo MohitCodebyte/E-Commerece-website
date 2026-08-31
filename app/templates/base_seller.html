@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Seller Portal | NOVA MART{% endblock %}</title>
+  <meta name="robots" content="noindex,nofollow">
+
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0f172a",
+            "secondary": "#4f46e5",
+            "secondary-hover": "#4338ca",
+            "accent": "#06b6d4",
+            "background": "#f8fafc",
+            "surface": "#ffffff",
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen">
+  
+  <!-- Dashboard Shell -->
+  <div class="dashboard-shell">
+    
+    <!-- Desktop Fixed 100vh Sidebar -->
+    <aside class="dashboard-sidebar-desktop hidden lg:flex">
+      {% include 'components/seller_sidebar_nav.html' %}
+    </aside>
+
+    <!-- Mobile Drawer Backdrop -->
+    <div id="mobile-sidebar-backdrop" class="dashboard-backdrop lg:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <!-- Mobile Slide-In Drawer Sidebar -->
+    <aside id="mobile-sidebar-drawer" class="dashboard-sidebar-mobile lg:hidden">
+      {% include 'components/seller_sidebar_nav.html' %}
+    </aside>
+
+    <!-- Main Content Wrapper (offset by 260px on desktop) -->
+    <div class="dashboard-main-wrap">
+      
+      <!-- Seller Top Bar (Sticky) -->
+      <header class="h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+        <div class="flex items-center gap-3">
+          <!-- Mobile Menu Trigger -->
+          <button type="button" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors" onclick="toggleMobileSidebar()" aria-label="Toggle navigation">
+            <span class="material-symbols-outlined text-2xl">menu</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-400">VendorCenter /</span>
+            <h1 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">{% block page_title %}Dashboard{% endblock %}</h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Live Storefront Link -->
+          <a href="{{ url_for('customer.home') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+            <span class="material-symbols-outlined text-sm text-indigo-600">store</span>
+            <span>View Marketplace</span>
+          </a>
+
+          <!-- Notifications -->
+          <a href="{{ url_for('seller.notifications') }}" class="relative p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-xl transition-colors" title="Notifications">
+            <span class="material-symbols-outlined text-xl">notifications</span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-600"></span>
+          </a>
+
+          <!-- Seller Profile / Logout -->
+          <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
+            <img src="{{ active_seller.logo if active_seller and active_seller.logo else (current_user.avatar if current_user and current_user.avatar else 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80') }}" 
+                 alt="Seller Avatar" 
+                 class="w-8 h-8 rounded-xl object-cover border border-slate-200 shadow-sm">
+            <div class="hidden md:block text-left">
+              <p class="text-xs font-bold text-slate-900 leading-none">{{ active_seller.store_name if active_seller else 'TechZone Store' }}</p>
+              <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">Verified Merchant</p>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors ml-1" title="Sign Out">
+              <span class="material-symbols-outlined text-lg">logout</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-fade-in-up">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  {% include 'components/toasts.html' %}
+
+  <!-- Vanilla JavaScript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script>
+    function toggleMobileSidebar() {
+      const drawer = document.getElementById('mobile-sidebar-drawer');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (drawer && backdrop) {
+        drawer.classList.toggle('open');
+        backdrop.classList.toggle('open');
+      }
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

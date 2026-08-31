@@ -1,0 +1,94 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Customer Help Desk & FAQs | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="text-center max-w-xl mx-auto mb-12">
+    <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3 shadow-inner">
+      <span class="material-symbols-outlined text-3xl">support_agent</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">How can we assist you?</h1>
+    <p class="text-xs sm:text-sm text-slate-500 mt-2">Find instant answers or reach our dedicated buyer support team</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+    <!-- Frequently Asked Questions -->
+    <div class="lg:col-span-7 space-y-4">
+      <h2 class="text-base font-extrabold text-slate-900 uppercase tracking-wider mb-2">Frequently Asked Questions</h2>
+      
+      <div class="bg-white rounded-3xl border border-slate-200 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs">
+        <details class="group p-5 cursor-pointer">
+          <summary class="font-extrabold text-slate-900 flex items-center justify-between">
+            <span>How does the 7-day doorstep return process work?</span>
+            <span class="material-symbols-outlined text-base text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-slate-600 leading-relaxed mt-3 pt-3 border-t border-slate-100">
+            You can request a return directly from your Account &gt; Returns section within 7 days of package delivery. Once approved by the seller, our courier will pick up the item and your refund will be credited to your original payment method.
+          </p>
+        </details>
+
+        <details class="group p-5 cursor-pointer">
+          <summary class="font-extrabold text-slate-900 flex items-center justify-between">
+            <span>Are products sold by verified sellers authentic?</span>
+            <span class="material-symbols-outlined text-base text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-slate-600 leading-relaxed mt-3 pt-3 border-t border-slate-100">
+            Yes. Every vendor on Nova Mart undergoes mandatory GSTIN verification, PAN validation, and authentic supply-chain background screening before their products are published.
+          </p>
+        </details>
+
+        <details class="group p-5 cursor-pointer">
+          <summary class="font-extrabold text-slate-900 flex items-center justify-between">
+            <span>What are the shipping delivery timeframes?</span>
+            <span class="material-symbols-outlined text-base text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-slate-600 leading-relaxed mt-3 pt-3 border-t border-slate-100">
+            Metro cities receive delivery in 24 to 48 hours via Delhivery or Blue Dart. Regional locations typically take 3 to 5 business days. Real-time courier waybill tracking is available in your account.
+          </p>
+        </details>
+
+        <details class="group p-5 cursor-pointer">
+          <summary class="font-extrabold text-slate-900 flex items-center justify-between">
+            <span>How do I contact an individual seller?</span>
+            <span class="material-symbols-outlined text-base text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+          </summary>
+          <p class="text-slate-600 leading-relaxed mt-3 pt-3 border-t border-slate-100">
+            You can view any seller's store profile, feedback rating, and address by clicking on their store tag on any product detail page.
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <!-- Contact Support Ticket Form -->
+    <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+      <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Submit a Ticket</h3>
+      <form action="{{ url_for('customer.support') }}" method="POST" class="space-y-4 text-xs font-semibold">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Your Name</label>
+          <input type="text" name="name" value="{{ current_user.name if current_user else '' }}" required placeholder="Aarav Sharma"
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Email Address</label>
+          <input type="email" name="email" value="{{ current_user.email if current_user else '' }}" required placeholder="you@example.com"
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Subject</label>
+          <input type="text" name="subject" required placeholder="Question about order or return"
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Message</label>
+          <textarea name="message" rows="4" required placeholder="Describe your query in detail..."
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl"></textarea>
+        </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-all">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

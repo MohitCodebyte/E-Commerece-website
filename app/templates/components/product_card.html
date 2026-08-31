@@ -1,0 +1,86 @@
+<!-- NOVA MART - Reusable Product Card Component -->
+<div class="product-card-container group">
+  
+  <!-- 1:1 Aspect Ratio Image Container with Badge & Wishlist -->
+  <div class="product-card-image-wrap">
+    <!-- Top-Left Badge -->
+    {% if product.badge %}
+      <span class="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-slate-900/90 text-white shadow-sm backdrop-blur-sm">
+        {{ product.badge }}
+      </span>
+    {% endif %}
+
+    <!-- Top-Right Wishlist Heart Button -->
+    <button type="button" 
+            data-product-id="{{ product.id }}"
+            class="wishlist-toggle-btn absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-500 hover:text-rose-500 hover:scale-110 active:scale-95 transition-all"
+            title="Save to Wishlist"
+            aria-label="Save to Wishlist">
+      <span class="material-symbols-outlined text-lg leading-none">favorite</span>
+    </button>
+
+    <!-- Product Image (Clickable to Detail) -->
+    <a href="{{ url_for('customer.product_detail', slug=product.slug) }}" class="w-full h-full block">
+      <img src="{{ product.thumbnail }}" 
+           alt="{{ product.title }}" 
+           loading="lazy"
+           class="w-full h-full object-cover">
+    </a>
+  </div>
+
+  <!-- Product Details Section (Strictly Below Image) -->
+  <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+    <div class="space-y-1.5">
+      <!-- Category & Brand Row -->
+      <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+        <span class="truncate">{{ product.category_name }}</span>
+        <span class="text-indigo-600 truncate max-w-[110px] text-right">{{ product.brand_name if product.brand_name else product.seller_name }}</span>
+      </div>
+
+      <!-- Product Name -->
+      <h3 class="font-bold text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-indigo-600 transition-colors">
+        <a href="{{ url_for('customer.product_detail', slug=product.slug) }}">
+          {{ product.title }}
+        </a>
+      </h3>
+
+      <!-- Star Rating & Review Count -->
+      <div class="flex items-center gap-1.5 pt-0.5">
+        <div class="flex items-center text-amber-400 text-xs">
+          <span class="material-symbols-outlined text-sm icon-fill">star</span>
+          <span class="font-extrabold text-slate-800 ml-1">{{ product.rating }}</span>
+        </div>
+        <span class="text-slate-400 text-[11px]">({{ product.review_count }})</span>
+      </div>
+    </div>
+
+    <!-- Pricing & Add to Cart -->
+    <div class="pt-2 border-t border-slate-100 space-y-3">
+      <!-- Price Line with Discount -->
+      <div class="flex items-baseline gap-2 flex-wrap">
+        <span class="font-black text-base sm:text-lg text-slate-900 tracking-tight">{{ product.price|currency }}</span>
+        {% if product.compare_at_price and product.compare_at_price > product.price %}
+          <span class="text-xs text-slate-400 line-through">{{ product.compare_at_price|currency }}</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+            {{ product.discount_percent }}% OFF
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Add To Cart Form Button -->
+      <form action="{{ url_for('customer.add_to_cart') }}" method="POST" class="ajax-add-to-cart">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <input type="hidden" name="quantity" value="1">
+        {% if product.variants and product.variants|length > 0 %}
+          <input type="hidden" name="variant_id" value="{{ product.variants[0].id }}">
+        {% endif %}
+        <button type="submit" 
+                class="w-full h-10 bg-slate-900 hover:bg-indigo-600 active:scale-98 text-white rounded-xl text-xs font-bold tracking-wide flex items-center justify-center gap-2 shadow-sm transition-all">
+          <span class="material-symbols-outlined text-base">add_shopping_cart</span>
+          <span>Add to Cart</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>

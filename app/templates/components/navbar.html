@@ -1,0 +1,142 @@
+<!-- NOVA MART - Customer Top Navigation Bar -->
+<header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm nav-sticky-header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4 py-3">
+    <!-- Brand Logo -->
+    <a href="{{ url_for('customer.home') }}" class="flex items-center gap-2.5 flex-shrink-0 group">
+      <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-md group-hover:bg-indigo-600 transition-colors">
+        <span class="material-symbols-outlined text-2xl text-cyan-400">shopping_bag</span>
+      </div>
+      <div>
+        <div class="font-extrabold text-xl tracking-tight text-slate-900 flex items-center">
+          NOVA<span class="text-indigo-600 ml-1">MART</span>
+        </div>
+        <div class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase -mt-1">PREMIUM MARKETPLACE</div>
+      </div>
+    </a>
+
+    <!-- Global Search Bar -->
+    <div class="hidden md:flex flex-1 max-w-xl mx-4">
+      <form action="{{ url_for('customer.search') }}" method="GET" class="w-full relative flex items-center">
+        <div class="absolute left-3.5 text-slate-400 flex items-center pointer-events-none">
+          <span class="material-symbols-outlined text-xl">search</span>
+        </div>
+        <input type="text" name="q" value="{{ request.args.get('q', '') }}" 
+               placeholder="Search products, brands, tech..."
+               class="w-full pl-11 pr-24 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/30 focus:border-indigo-600 transition-all">
+        <button type="submit" class="absolute right-2 px-3 py-1.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-lg text-xs font-semibold tracking-wide transition-colors">
+          Search
+        </button>
+      </form>
+    </div>
+
+    <!-- Navigation Actions -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Catalog Link -->
+      <a href="{{ url_for('customer.shop') }}" class="hidden lg:flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-slate-700 hover:text-indigo-600 rounded-lg hover:bg-slate-50 transition-colors">
+        <span class="material-symbols-outlined text-lg">storefront</span>
+        Shop Catalog
+      </a>
+
+      <!-- Wishlist Action -->
+      <a href="{{ url_for('customer.wishlist') }}" class="relative p-2.5 text-slate-700 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors" title="Wishlist">
+        <span class="material-symbols-outlined text-2xl">favorite</span>
+        <span class="wishlist-count-badge absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[11px] font-bold flex items-center justify-center shadow-sm {% if wishlist_count == 0 %}hidden{% endif %}">
+          {{ wishlist_count }}
+        </span>
+      </a>
+
+      <!-- Cart Action -->
+      <a href="{{ url_for('customer.cart') }}" class="relative flex items-center gap-2 p-2 sm:px-3.5 py-2 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl shadow-sm transition-all" title="Shopping Cart">
+        <div class="relative">
+          <span class="material-symbols-outlined text-xl text-white">shopping_cart</span>
+          <span class="cart-count-badge absolute -top-2.5 -right-2.5 w-5 h-5 rounded-full bg-indigo-500 text-white text-[11px] font-bold flex items-center justify-center shadow-md {% if cart_count == 0 %}hidden{% endif %}">
+            {{ cart_count }}
+          </span>
+        </div>
+        <span class="hidden sm:inline-block text-xs font-semibold tracking-wide">
+          {{ cart.total|currency }}
+        </span>
+      </a>
+
+      <!-- User Profile / Auth Action -->
+      {% if current_user %}
+        <div class="relative group">
+          <a href="{{ url_for('customer.account') }}" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 transition-colors">
+            <img src="{{ current_user.avatar or 'https://lh3.googleusercontent.com/aida-public/AB6AXuDL9hkvls8j7H6g5F4d3S2a1Q0w9E8r7T6y5U4i=s200' }}" 
+                 alt="{{ current_user.name }}" 
+                 class="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-sm">
+            <span class="hidden md:inline-block text-sm font-semibold text-slate-800 max-w-[120px] truncate">
+              {{ current_user.name }}
+            </span>
+            <span class="material-symbols-outlined text-slate-400 text-sm hidden md:inline-block">expand_more</span>
+          </a>
+          <!-- Dropdown menu -->
+          <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 hidden group-hover:block z-50 dropdown-menu-animated">
+            <div class="px-4 py-2 border-b border-slate-100">
+              <p class="text-xs text-slate-400 uppercase font-semibold">Signed in as</p>
+              <p class="text-sm font-bold text-slate-900 truncate">{{ current_user.email }}</p>
+            </div>
+            <a href="{{ url_for('customer.account') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600">
+              <span class="material-symbols-outlined text-lg text-slate-400">person</span>
+              My Account
+            </a>
+            <a href="{{ url_for('customer.orders') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600">
+              <span class="material-symbols-outlined text-lg text-slate-400">package_2</span>
+              My Orders
+            </a>
+            <a href="{{ url_for('customer.addresses') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600">
+              <span class="material-symbols-outlined text-lg text-slate-400">home_pin</span>
+              Saved Addresses
+            </a>
+            <a href="{{ url_for('customer.reviews') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600">
+              <span class="material-symbols-outlined text-lg text-slate-400">reviews</span>
+              My Reviews
+            </a>
+            <div class="border-t border-slate-100 my-1"></div>
+            <a href="{{ url_for('auth.logout') }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+              <span class="material-symbols-outlined text-lg text-red-400">logout</span>
+              Sign Out
+            </a>
+          </div>
+        </div>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}" class="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-slate-700 hover:text-indigo-600 rounded-xl hover:bg-slate-50 transition-colors">
+          <span class="material-symbols-outlined text-lg">login</span>
+          Sign In
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Category Nav Strip -->
+  <div class="bg-slate-50 border-t border-slate-200 hidden md:block">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs font-semibold text-slate-600 py-2">
+      <div class="flex items-center gap-6 overflow-x-auto hide-scrollbar py-0.5">
+        <a href="{{ url_for('customer.shop') }}" class="hover:text-indigo-600 transition-colors flex items-center gap-1 text-slate-900 font-bold">
+          <span class="material-symbols-outlined text-sm">grid_view</span>
+          All Products
+        </a>
+        {% for cat in categories %}
+          <a href="{{ url_for('customer.category', slug=cat.slug) }}" class="hover:text-indigo-600 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm text-slate-400">{{ cat.icon }}</span>
+            {{ cat.name }}
+          </a>
+        {% endfor %}
+      </div>
+      <div class="flex items-center gap-5 text-slate-500">
+        <a href="{{ url_for('customer.track_order') }}" class="hover:text-indigo-600 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">local_shipping</span>
+          Track Order
+        </a>
+        <a href="{{ url_for('customer.support') }}" class="hover:text-indigo-600 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">headset_mic</span>
+          24/7 Help
+        </a>
+        <a href="{{ url_for('seller.register') }}" class="text-indigo-600 hover:text-indigo-700 font-bold flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">store</span>
+          Sell On Nova Mart
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

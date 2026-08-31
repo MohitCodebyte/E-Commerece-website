@@ -1,0 +1,65 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Store Management | VendorCenter{% endblock %}
+{% block page_title %}Store Page Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Storefront Customization</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Customize your brand appearance, store logo, and contact info</p>
+    </div>
+    <a href="{{ url_for('customer.home') }}" target="_blank" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-sm">storefront</span>
+      Customer View
+    </a>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+    <div class="flex items-center gap-5 pb-6 border-b border-slate-100">
+      <img src="{{ seller.logo }}" alt="{{ seller.store_name }}" class="w-20 h-20 rounded-2xl object-cover border border-slate-200 shadow-sm">
+      <div>
+        <h3 class="text-lg font-extrabold text-slate-900">{{ seller.store_name }}</h3>
+        <p class="text-xs text-slate-500">GSTIN: <strong class="font-mono text-slate-700">{{ seller.gstin }}</strong></p>
+        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase">
+          {{ seller.kyc_status }} Partner
+        </span>
+      </div>
+    </div>
+
+    <form action="{{ url_for('seller.store') }}" method="POST" class="space-y-4 text-xs font-semibold">
+      <div>
+        <label class="block text-slate-700 uppercase mb-1">Store Name</label>
+        <input type="text" name="store_name" value="{{ seller.store_name }}" required
+               class="w-full px-4 py-2.5 bg-slate-50 border rounded-xl font-bold">
+      </div>
+
+      <div>
+        <label class="block text-slate-700 uppercase mb-1">Brand Description</label>
+        <textarea name="description" rows="3" required
+                  class="w-full px-4 py-2.5 bg-slate-50 border rounded-xl font-medium">{{ seller.description }}</textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Support Contact Email</label>
+          <input type="email" name="contact_email" value="{{ seller.contact_email }}" required
+                 class="w-full px-4 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Support Contact Phone</label>
+          <input type="tel" name="contact_phone" value="{{ seller.contact_phone }}" required
+                 class="w-full px-4 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+      </div>
+
+      <div class="pt-4 flex justify-end">
+        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-all">
+          Save Store Profile
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

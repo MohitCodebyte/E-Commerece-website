@@ -1,0 +1,67 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Broadcast Alerts & Notifications | Super Admin{% endblock %}
+{% block page_title %}Platform Alerts & Broadcasts{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Broadcast System Alerts</h2>
+    <p class="text-xs text-slate-500 mt-0.5">Send high-priority notifications to sellers, customers, or across the platform</p>
+  </div>
+
+  <!-- Broadcast Form -->
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Publish Platform Broadcast</h3>
+    <form action="{{ url_for('admin.broadcast') }}" method="POST" class="space-y-4 text-xs font-semibold">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Target Audience</label>
+          <select name="target_role" required class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-bold">
+            <option value="all">Everyone (All Customers &amp; Sellers)</option>
+            <option value="seller">Verified Sellers Only</option>
+            <option value="customer">Customers Only</option>
+            <option value="admin">Administrators Only</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Notification Title</label>
+          <input type="text" name="title" placeholder="e.g. Diwali Super Festive Sale Announced" required
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-slate-700 uppercase mb-1">Broadcast Message Body</label>
+        <textarea name="message" rows="3" placeholder="Enter message text..." required
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl"></textarea>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-all">
+          Broadcast Now
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Broadcast Log List -->
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Recent Platform Alerts</h3>
+    <div class="space-y-3">
+      {% for n in notifications %}
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-4 text-xs">
+          <span class="material-symbols-outlined text-indigo-600 text-xl">{{ n.icon }}</span>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900">{{ n.title }}</h4>
+              <span class="text-[10px] text-slate-400 font-mono">{{ n.created_at }}</span>
+            </div>
+            <p class="text-slate-600 mt-1">{{ n.message }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

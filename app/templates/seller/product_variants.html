@@ -1,0 +1,57 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Product Variants - {{ product.title }} | VendorCenter{% endblock %}
+{% block page_title %}Variants Management{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">{{ product.title }}</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Manage SKU variants, colorways, sizes, and specific pricing</p>
+    </div>
+    <a href="{{ url_for('seller.products') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors">
+      Back to Products
+    </a>
+  </div>
+
+  <!-- Variants Table -->
+  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Current Variations ({{ variants|length }})</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-semibold">
+        <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-6">Variant Name</th>
+            <th class="py-3 px-4">SKU Code</th>
+            <th class="py-3 px-4">Price</th>
+            <th class="py-3 px-4">Allocated Stock</th>
+            <th class="py-3 px-6 text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for v in variants %}
+            <tr>
+              <td class="py-4 px-6 font-bold text-slate-900">{{ v.name }}</td>
+              <td class="py-4 px-4 font-mono text-slate-500">{{ v.sku }}</td>
+              <td class="py-4 px-4 font-extrabold text-slate-900">{{ v.price|currency }}</td>
+              <td class="py-4 px-4">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">
+                  {{ v.stock }} units
+                </span>
+              </td>
+              <td class="py-4 px-6 text-right">
+                <span class="text-emerald-600 font-bold flex items-center gap-1 justify-end">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

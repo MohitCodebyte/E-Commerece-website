@@ -1,0 +1,73 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Product Insights - {{ product.title }} | VendorCenter{% endblock %}
+{% block page_title %}Product Analytics & Insights{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">{{ product.title }}</h2>
+      <p class="text-xs text-slate-500 mt-0.5">SKU: <span class="font-mono text-slate-700 font-bold">{{ product.sku }}</span> &bull; Rating: {{ product.rating }} ★</p>
+    </div>
+    <a href="{{ url_for('seller.products') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors">
+      Back to Products
+    </a>
+  </div>
+
+  <!-- Performance Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Units Sold</span>
+      <div class="text-3xl font-black text-slate-900 mt-2">142</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">trending_up</span> +18% this month
+      </p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Revenue Generated</span>
+      <div class="text-3xl font-black text-indigo-600 mt-2">{{ (product.price * 142)|currency }}</div>
+      <p class="text-[11px] text-slate-500 font-semibold mt-1">Direct GMV contribution</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Customer Conversion</span>
+      <div class="text-3xl font-black text-slate-900 mt-2">4.8%</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">High conversion tier</p>
+    </div>
+  </div>
+
+  <!-- Customer Reviews on This Product -->
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-extrabold text-slate-900">Recent Customer Reviews</h3>
+      <span class="text-xs font-bold text-slate-500">{{ reviews|length }} Total</span>
+    </div>
+
+    {% if reviews %}
+      <div class="divide-y divide-slate-100">
+        {% for r in reviews %}
+          <div class="py-4 first:pt-0 last:pb-0 space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-xs text-slate-900">{{ r.user_name }}</span>
+                <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-bold">Verified Buyer</span>
+              </div>
+              <div class="flex text-amber-400 text-xs">
+                {% for i in range(r.rating) %}
+                  <span class="material-symbols-outlined text-sm icon-fill">star</span>
+                {% endfor %}
+              </div>
+            </div>
+            <p class="text-xs font-bold text-slate-800">{{ r.title }}</p>
+            <p class="text-xs text-slate-600">{{ r.comment }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-xs text-slate-400 py-4 text-center">No reviews for this product yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

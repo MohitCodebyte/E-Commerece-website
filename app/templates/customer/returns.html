@@ -1,0 +1,114 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Returns & Refunds | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-8">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Returns &amp; Refunds</h1>
+      <p class="text-xs text-slate-500 mt-1">Hassle-free 7-day doorstep replacement and refund requests</p>
+    </div>
+    {% if orders %}
+      <button type="button" onclick="document.getElementById('return-modal').classList.remove('hidden')"
+              class="px-5 py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">assignment_return</span>
+        Request New Return
+      </button>
+    {% endif %}
+  </div>
+
+  {% if returns %}
+    <div class="space-y-4">
+      {% for ret in returns %}
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="font-mono text-xs font-extrabold text-slate-900">#{{ ret.id }}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider
+                {% if ret.status == 'approved' %}bg-emerald-50 text-emerald-700
+                {% elif ret.status == 'rejected' %}bg-rose-50 text-rose-700
+                {% else %}bg-amber-50 text-amber-700{% endif %}">
+                {{ ret.status }}
+              </span>
+              <span class="text-xs text-slate-400">Order: {{ ret.order_id }}</span>
+            </div>
+            <h4 class="text-sm font-bold text-slate-900">{{ ret.product_title }}</h4>
+            <p class="text-xs text-slate-500">Reason: <strong class="text-slate-700">{{ ret.reason }}</strong></p>
+            {% if ret.comments %}
+              <p class="text-xs text-slate-400 bg-slate-50 p-2.5 rounded-xl border border-slate-100">{{ ret.comments }}</p>
+            {% endif %}
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block font-semibold">Refund Amount</span>
+            <span class="text-base font-black text-slate-900">{{ ret.amount|currency }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-md mx-auto shadow-sm">
+      <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">assignment_return</span>
+      <h3 class="text-base font-bold text-slate-800">No active return requests</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-6">Need to return or replace an item from a recent order?</p>
+      {% if orders %}
+        <button type="button" onclick="document.getElementById('return-modal').classList.remove('hidden')"
+                class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+          Create Return Request
+        </button>
+      {% else %}
+        <a href="{{ url_for('customer.shop') }}" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+          Shop Now
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- Return Request Modal -->
+  {% if orders %}
+    <div id="return-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-extrabold text-slate-900">Request Item Return</h3>
+          <button type="button" onclick="document.getElementById('return-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form action="{{ url_for('customer.returns') }}" method="POST" class="space-y-4 text-xs font-semibold">
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Select Eligible Order</label>
+            <select name="order_id" required class="w-full px-3 py-2.5 bg-slate-50 border rounded-xl">
+              {% for o in orders %}
+                <option value="{{ o.id }}">{{ o.id }} - {{ o['items'][0].product_title }} ({{ o.total|currency }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Reason for Return</label>
+            <select name="reason" required class="w-full px-3 py-2.5 bg-slate-50 border rounded-xl">
+              <option value="Defective or Damaged Unit">Defective or Damaged Unit</option>
+              <option value="Item not as described">Item not as described</option>
+              <option value="Wrong size or color variant received">Wrong size or color variant received</option>
+              <option value="Missing components or accessories">Missing components or accessories</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Additional Details</label>
+            <textarea name="comments" rows="3" placeholder="Please describe the issue in detail..." required
+                      class="w-full px-3 py-2 bg-slate-50 border rounded-xl"></textarea>
+          </div>
+
+          <div class="pt-4 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('return-modal').classList.add('hidden')" class="px-4 py-2 bg-slate-100 rounded-xl">Cancel</button>
+            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold">Submit Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Vendor Notifications | VendorCenter{% endblock %}
+{% block page_title %}Alerts & Notifications{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Vendor Alerts</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Order notifications, restock alerts, and settlement confirmations</p>
+    </div>
+    <span class="px-3 py-1 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-sm">
+      {{ notifications|length }} Alerts
+    </span>
+  </div>
+
+  <div class="space-y-3">
+    {% for n in notifications %}
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex items-start gap-4 {% if not n.is_read %}border-l-4 border-l-indigo-600{% endif %}">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-xl">{{ n.icon }}</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-slate-900">{{ n.title }}</h4>
+            <span class="text-[10px] text-slate-400 font-mono">{{ n.created_at }}</span>
+          </div>
+          <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">{{ n.message }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

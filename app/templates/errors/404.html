@@ -1,0 +1,24 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Page Not Found (404) | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-24 text-center">
+  <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400 mb-6 shadow-inner">
+    <span class="material-symbols-outlined text-4xl">search_off</span>
+  </div>
+  <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Error 404</span>
+  <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-3 tracking-tight">Looking for something?</h1>
+  <p class="text-slate-500 text-sm sm:text-base leading-relaxed mb-8">
+    The product, category, or page you are trying to visit does not exist or has been moved.
+  </p>
+  <div class="flex items-center justify-center gap-3">
+    <a href="{{ url_for('customer.home') }}" class="px-6 py-3 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-sm font-semibold transition-colors shadow-md">
+      Back to Home
+    </a>
+    <a href="{{ url_for('customer.shop') }}" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-sm font-semibold transition-colors">
+      Browse Catalog
+    </a>
+  </div>
+</div>
+{% endblock %}

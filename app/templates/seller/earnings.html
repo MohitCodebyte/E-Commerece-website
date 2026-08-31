@@ -1,0 +1,86 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}Earnings & Commission | VendorCenter{% endblock %}
+{% block page_title %}Financial Earnings{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Earnings &amp; Net Settlements</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Comprehensive multi-vendor revenue splits with transparent 10% platform commission</p>
+    </div>
+    <a href="{{ url_for('seller.payout_request') }}" 
+       class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm">payments</span>
+      Request Bank Payout
+    </a>
+  </div>
+
+  <!-- Financial Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Gross Merchandise Value</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">{{ metrics.gmv|currency }}</div>
+      <p class="text-[11px] text-slate-500 font-semibold mt-1">Total customer payment volume</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Commission</span>
+      <div class="text-2xl font-black text-indigo-600 mt-2">{{ metrics.total_commission|currency }}</div>
+      <p class="text-[11px] text-slate-500 font-semibold mt-1">Flat 10% platform service fee</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Net Seller Earning</span>
+      <div class="text-2xl font-black text-emerald-600 mt-2">{{ metrics.net_earnings|currency }}</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">90% net after commission</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Available Balance</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">{{ seller.balance|currency }}</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">Eligible for instant withdrawal</p>
+    </div>
+  </div>
+
+  <!-- Breakdown Table -->
+  <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm space-y-4">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Per-Order Settlement Audit</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs font-semibold">
+        <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] border-b border-slate-200">
+          <tr>
+            <th class="py-3 px-6">Order ID</th>
+            <th class="py-3 px-4">Date</th>
+            <th class="py-3 px-4">Customer</th>
+            <th class="py-3 px-4">Vendor Subtotal</th>
+            <th class="py-3 px-4">Nova Mart Fee (10%)</th>
+            <th class="py-3 px-4">Your Net Earning</th>
+            <th class="py-3 px-6 text-right">Settlement Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for o in orders %}
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-4 px-6 font-mono font-bold text-slate-900">#{{ o.id }}</td>
+              <td class="py-4 px-4 text-slate-500">{{ o.order_date }}</td>
+              <td class="py-4 px-4 text-slate-800">{{ o.shipping_address.recipient }}</td>
+              <td class="py-4 px-4 font-bold text-slate-900">{{ o.seller_subtotal|currency }}</td>
+              <td class="py-4 px-4 text-indigo-600 font-bold">&minus;{{ o.seller_commission|currency }}</td>
+              <td class="py-4 px-4 font-extrabold text-emerald-600">{{ o.seller_net_earning|currency }}</td>
+              <td class="py-4 px-6 text-right">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase">
+                  Settled
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

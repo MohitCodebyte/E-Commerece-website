@@ -1,0 +1,21 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Internal Server Error (500) | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-24 text-center">
+  <div class="w-20 h-20 mx-auto rounded-3xl bg-rose-50 flex items-center justify-center text-rose-500 mb-6 shadow-inner">
+    <span class="material-symbols-outlined text-4xl">bug_report</span>
+  </div>
+  <span class="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">Error 500</span>
+  <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-3 tracking-tight">Something went wrong</h1>
+  <p class="text-slate-500 text-sm sm:text-base leading-relaxed mb-8">
+    Our application encountered an unexpected error. Please return to the homepage or try again.
+  </p>
+  <div class="flex items-center justify-center gap-3">
+    <a href="{{ url_for('customer.home') }}" class="px-6 py-3 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-sm font-semibold transition-colors shadow-md">
+      Back to Home
+    </a>
+  </div>
+</div>
+{% endblock %}

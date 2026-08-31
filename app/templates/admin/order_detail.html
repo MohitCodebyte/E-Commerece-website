@@ -1,0 +1,105 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Order Details #{{ order.id }} | Super Admin{% endblock %}
+{% block page_title %}Order Inspection{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
+        <a href="{{ url_for('admin.orders') }}" class="hover:text-indigo-600">Orders</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800">#{{ order.id }}</span>
+      </nav>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+        Master Order Inspection <span class="font-mono text-indigo-600">#{{ order.id }}</span>
+      </h2>
+      <p class="text-xs text-slate-500 mt-0.5">Placed on {{ order.order_date }} &bull; Current Status: <strong class="uppercase text-slate-800">{{ order.status }}</strong></p>
+    </div>
+    <a href="{{ url_for('admin.orders') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors">
+      Back to Orders
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Line Items &amp; Vendor Splits</h3>
+
+        <div class="divide-y divide-slate-100">
+          {% for item in order['items'] %}
+            <div class="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-4">
+                <img src="{{ item.image }}" alt="{{ item.product_title }}" class="w-14 h-14 rounded-2xl bg-slate-50 border p-1 object-contain">
+                <div>
+                  <h4 class="text-xs font-bold text-slate-900">{{ item.product_title }}</h4>
+                  <p class="text-[11px] text-slate-400">Vendor: <strong class="text-indigo-600">{{ item.seller_name }}</strong></p>
+                  <p class="text-[10px] text-emerald-600 font-semibold">Vendor Net: {{ item.seller_net_earning|currency }} &bull; Platform Commission: {{ item.commission_amount|currency }}</p>
+                </div>
+              </div>
+              <span class="text-xs font-extrabold text-slate-900">{{ (item.price * item.quantity)|currency }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="pt-6 border-t border-slate-100 space-y-2 text-xs font-semibold text-slate-600">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span class="text-slate-900 font-bold">{{ order.subtotal|currency }}</span>
+          </div>
+          {% if order.discount > 0 %}
+            <div class="flex justify-between text-emerald-600">
+              <span>Coupon Discount ({{ order.coupon_code }})</span>
+              <span class="font-bold">&minus;{{ order.discount|currency }}</span>
+            </div>
+          {% endif %}
+          <div class="flex justify-between">
+            <span>GST (18%)</span>
+            <span class="text-slate-900 font-bold">{{ order.tax|currency }}</span>
+          </div>
+          <div class="flex justify-between text-indigo-600">
+            <span>Admin Platform Take</span>
+            <span class="font-bold">{{ order.total_commission|currency }}</span>
+          </div>
+          <div class="border-t border-slate-100 pt-3 flex justify-between text-base font-black text-slate-900">
+            <span>Grand Total Collected</span>
+            <span class="text-indigo-600">{{ order.total|currency }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Status Control Sidebar -->
+    <div class="space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Override Order Status</h3>
+        <form action="{{ url_for('admin.order_update_status', order_id=order.id) }}" method="POST" class="space-y-3 text-xs font-semibold">
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Marketplace Status</label>
+            <select name="status" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+              <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+              <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+              <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+              <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl font-bold transition-colors">
+            Update Platform State
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-3">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Shipping Details</h3>
+        <div class="text-xs text-slate-600 space-y-1">
+          <p class="font-bold text-slate-900">{{ order.shipping_address.recipient }}</p>
+          <p>{{ order.shipping_address.street }}</p>
+          <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.pincode }}</p>
+          <p class="text-slate-400 font-mono">Carrier: {{ order.carrier }} &bull; {{ order.tracking_number }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

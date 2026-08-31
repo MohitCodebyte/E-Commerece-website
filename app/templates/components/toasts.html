@@ -1,0 +1,11 @@
+<!-- Flash Messages for Client Toast Injection -->
+<div id="flash-messages" class="hidden">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message-item" data-type="{{ category }}" data-message="{{ message }}"></div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+<div id="toast-container"></div>

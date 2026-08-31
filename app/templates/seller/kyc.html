@@ -1,0 +1,70 @@
+{% extends 'base_seller.html' %}
+
+{% block title %}KYC Compliance Verification | VendorCenter{% endblock %}
+{% block page_title %}KYC & Legal Compliance{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+  <div>
+    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Business KYC &amp; Verification</h2>
+    <p class="text-xs text-slate-500 mt-0.5">Government tax and enterprise registration credentials required under Indian e-commerce laws</p>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+    <div class="flex items-center justify-between p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-2xl text-emerald-600">verified</span>
+        <div>
+          <h4 class="text-xs font-extrabold text-emerald-900 uppercase">Verification Status</h4>
+          <p class="text-xs text-emerald-700 font-medium">All statutory business documents have been verified and approved.</p>
+        </div>
+      </div>
+      <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+        Active
+      </span>
+    </div>
+
+    <form action="{{ url_for('seller.kyc') }}" method="POST" class="space-y-4 text-xs font-semibold">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">Company PAN Card #</label>
+          <input type="text" name="pan" value="{{ seller.pan }}" required
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono uppercase font-bold">
+        </div>
+        <div>
+          <label class="block text-slate-700 uppercase mb-1">GSTIN Registration #</label>
+          <input type="text" name="gstin" value="{{ seller.gstin }}" required
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono uppercase font-bold">
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 space-y-4">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Commercial Bank Details for NEFT Payouts</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Bank Name</label>
+            <input type="text" name="bank_name" value="{{ seller.bank_details.bank_name }}" required
+                   class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl">
+          </div>
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">Account Number</label>
+            <input type="text" name="account_number" value="{{ seller.bank_details.account_number }}" required
+                   class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-700 uppercase mb-1">IFSC Code</label>
+            <input type="text" name="ifsc" value="{{ seller.bank_details.ifsc }}" required
+                   class="w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl font-mono uppercase">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 flex justify-end">
+        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-all">
+          Update KYC Records
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

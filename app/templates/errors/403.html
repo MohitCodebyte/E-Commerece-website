@@ -1,0 +1,27 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}Access Forbidden (403) | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-24 text-center">
+  <div class="w-20 h-20 mx-auto rounded-3xl bg-amber-50 flex items-center justify-center text-amber-500 mb-6 shadow-inner">
+    <span class="material-symbols-outlined text-4xl">lock</span>
+  </div>
+  <span class="text-xs font-bold uppercase tracking-widest text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Error 403 &bull; Authorization Required</span>
+  <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-3 tracking-tight">Restricted Portal Access</h1>
+  <p class="text-slate-500 text-sm sm:text-base leading-relaxed mb-8">
+    You do not have permission to view this section. Use the demo role switcher at the top to switch between Customer, Seller, or Super Admin accounts.
+  </p>
+  <div class="flex flex-wrap items-center justify-center gap-3">
+    <a href="{{ url_for('auth.switch_demo_role', role='customer') }}" class="px-5 py-2.5 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl text-xs font-semibold transition-colors">
+      Switch to Customer
+    </a>
+    <a href="{{ url_for('auth.switch_demo_role', role='seller') }}" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold transition-colors">
+      Switch to Seller
+    </a>
+    <a href="{{ url_for('auth.switch_demo_role', role='admin') }}" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold transition-colors">
+      Switch to Admin
+    </a>
+  </div>
+</div>
+{% endblock %}

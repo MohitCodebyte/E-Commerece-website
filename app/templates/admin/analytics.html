@@ -1,0 +1,112 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Platform Analytics | Super Admin{% endblock %}
+{% block page_title %}Marketplace Analytics & Growth{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Marketplace Analytics &amp; Revenue</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Aggregated pan-India transaction metrics and commission yield</p>
+    </div>
+  </div>
+
+  <!-- Big Metric Overview -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Platform GMV</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">{{ total_gmv|currency }}</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">+24.5% year-on-year</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Commission Yield</span>
+      <div class="text-2xl font-black text-indigo-600 mt-2">{{ total_commission|currency }}</div>
+      <p class="text-[11px] text-indigo-600 font-semibold mt-1">11.4% blended take rate</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Orders Processed</span>
+      <div class="text-2xl font-black text-slate-900 mt-2">{{ orders|length }}</div>
+      <p class="text-[11px] text-slate-500 font-semibold mt-1">Multi-vendor fulfillment</p>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Average Cart Basket</span>
+      <div class="text-2xl font-black text-emerald-600 mt-2">₹19,300</div>
+      <p class="text-[11px] text-emerald-600 font-semibold mt-1">Premium tech-lifestyle mix</p>
+    </div>
+  </div>
+
+  <!-- City & Department Distribution -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Regional Delivery Distribution</h3>
+      <div class="space-y-3 text-xs font-semibold">
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Mumbai &amp; MMR Region</span>
+            <span class="font-bold text-slate-900">38% of GMV</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full" style="width: 38%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Bengaluru Urban</span>
+            <span class="font-bold text-slate-900">29% of GMV</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full" style="width: 29%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Delhi NCR</span>
+            <span class="font-bold text-slate-900">21% of GMV</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full" style="width: 21%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-1">
+            <span>Tier 2/3 Cities</span>
+            <span class="font-bold text-slate-900">12% of GMV</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+            <div class="h-full bg-indigo-600 rounded-full" style="width: 12%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+      <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Payment Gateway Distribution</h3>
+      <div class="space-y-3 text-xs font-semibold">
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl">
+          <span class="text-slate-700">UPI (Google Pay / PhonePe / Paytm)</span>
+          <span class="font-black text-indigo-600">62% Volume</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl">
+          <span class="text-slate-700">Credit / Debit Cards (Visa / MC / RuPay)</span>
+          <span class="font-black text-indigo-600">24% Volume</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl">
+          <span class="text-slate-700">Net Banking</span>
+          <span class="font-black text-indigo-600">9% Volume</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl">
+          <span class="text-slate-700">Cash on Delivery (COD)</span>
+          <span class="font-black text-indigo-600">5% Volume</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

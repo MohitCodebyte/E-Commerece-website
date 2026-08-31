@@ -1,0 +1,143 @@
+{% extends 'base_customer.html' %}
+
+{% block title %}My Account | NOVA MART{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- User Profile Card Left -->
+    <div class="lg:col-span-4 space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 text-center shadow-sm">
+        <img src="{{ user.avatar or 'https://lh3.googleusercontent.com/aida-public/AB6AXuDL9hkvls8j7H6g5F4d3S2a1Q0w9E8r7T6y5U4i=s200' }}" 
+             alt="{{ user.name }}" 
+             class="w-24 h-24 rounded-3xl mx-auto object-cover border-4 border-slate-50 shadow-md">
+        <h2 class="text-xl font-extrabold text-slate-900 mt-4">{{ user.name }}</h2>
+        <p class="text-xs text-slate-500 font-medium">{{ user.email }}</p>
+        <span class="inline-block mt-3 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+          Verified Buyer &bull; Member
+        </span>
+
+        <div class="grid grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-100 text-center">
+          <div class="p-3 bg-slate-50 rounded-2xl">
+            <span class="text-xl font-extrabold text-slate-900 block">{{ total_orders }}</span>
+            <span class="text-[11px] text-slate-500 font-medium">Total Orders</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl">
+            <span class="text-xl font-extrabold text-slate-900 block">{{ user.addresses|length }}</span>
+            <span class="text-[11px] text-slate-500 font-medium">Addresses</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden divide-y divide-slate-100 shadow-sm text-xs font-bold text-slate-700">
+        <a href="{{ url_for('customer.orders') }}" class="flex items-center justify-between p-4 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-lg text-indigo-600">package_2</span>
+            <span>My Orders &amp; Invoices</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+        </a>
+        <a href="{{ url_for('customer.addresses') }}" class="flex items-center justify-between p-4 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-lg text-indigo-600">home_pin</span>
+            <span>Saved Addresses</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+        </a>
+        <a href="{{ url_for('customer.reviews') }}" class="flex items-center justify-between p-4 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-lg text-indigo-600">reviews</span>
+            <span>My Product Reviews</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+        </a>
+        <a href="{{ url_for('customer.returns') }}" class="flex items-center justify-between p-4 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-lg text-indigo-600">assignment_return</span>
+            <span>Returns &amp; Refunds</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+        </a>
+        <a href="{{ url_for('customer.profile') }}" class="flex items-center justify-between p-4 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-lg text-indigo-600">settings</span>
+            <span>Account Settings</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Orders & Notifications Right -->
+    <div class="lg:col-span-8 space-y-6">
+      
+      <!-- Recent Orders Card -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Recent Orders</h3>
+          <a href="{{ url_for('customer.orders') }}" class="text-xs font-bold text-indigo-600 hover:underline">View All Orders &rarr;</a>
+        </div>
+
+        {% if recent_orders %}
+          <div class="divide-y divide-slate-100">
+            {% for o in recent_orders %}
+              <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-xs font-extrabold text-slate-900">#{{ o.id }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
+                      {% if o.status == 'delivered' %}bg-emerald-50 text-emerald-700
+                      {% elif o.status == 'shipped' %}bg-blue-50 text-blue-700
+                      {% else %}bg-amber-50 text-amber-700{% endif %}">
+                      {{ o.status }}
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500">{{ o.order_date }} &bull; {{ o['items']|length }} Item(s)</p>
+                </div>
+                <div class="flex items-center gap-4 justify-between sm:justify-end">
+                  <span class="font-extrabold text-sm text-slate-900">{{ o.total|currency }}</span>
+                  <a href="{{ url_for('customer.order_detail', order_id=o.id) }}" 
+                     class="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 border border-slate-200 transition-colors">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-xs text-slate-400 py-6 text-center">No orders found yet.</p>
+        {% endif %}
+      </div>
+
+      <!-- Account Notifications -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight">Recent Updates</h3>
+          <a href="{{ url_for('customer.notifications') }}" class="text-xs font-bold text-indigo-600 hover:underline">All Alerts &rarr;</a>
+        </div>
+
+        {% if notifications %}
+          <div class="space-y-3">
+            {% for n in notifications %}
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3 text-xs">
+                <span class="material-symbols-outlined text-indigo-600 text-lg mt-0.5">{{ n.icon }}</span>
+                <div class="flex-1">
+                  <p class="font-bold text-slate-900">{{ n.title }}</p>
+                  <p class="text-slate-500 mt-0.5">{{ n.message }}</p>
+                  <span class="text-[10px] text-slate-400 block mt-1">{{ n.created_at }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-xs text-slate-400 py-4 text-center">No unread notifications.</p>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}
